@@ -9,7 +9,7 @@ file.close()
 
 print(text, end="")
 
-words_to_delete = [" się ", " i ", " oraz ", " nigdy ", " dlaczego"]
+words_to_delete = [" się", " i ", " oraz ", " nigdy", " dlaczego"]
 
 for word_to_delete in words_to_delete:
 	text = text.replace(word_to_delete, " ")
@@ -26,8 +26,8 @@ print(text, end="")
 words_to_swap = {
 		 " i " 		: " oraz ",
 		 " oraz " 	: " i ",
-		 " nigdy " 	: " prawie nigdy ",
-		 " dlaczego"	: " czemu "
+		 " nigdy" 	: " prawie nigdy",
+		 " dlaczego"	: " czemu"
 		}
 
 for word_to_swap in words_to_swap:
