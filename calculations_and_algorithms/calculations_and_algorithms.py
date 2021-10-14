@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/python3
 
 from random import randrange
 import numpy as np
