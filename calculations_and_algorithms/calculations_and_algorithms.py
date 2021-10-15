@@ -22,42 +22,130 @@ def calculate_quadratic(a, b, c):
 
 # --- SORTING --- #
 
-unsorted_array = np.asarray([randrange(100) for _ in range(5)])
-print(f"Unsorted:\n{unsorted_array}")
+unsorted_array = np.asarray([randrange(100) for _ in range(50)])
+# print(f"Unsorted:\n{unsorted_array}")
+
+# Takes last element as pivot and puts all smaller elements to it's left
+# and greater elements to it's right. @Returns the pivot's final index.
+def prepare_array(array, left, right):
+
+	i = left - 1
+	pivot = array[right]
+
+	for j in range(left, right):
+
+		if array[j] <= pivot:
+
+			i += 1
+			array[i], array[j] = array[j], array[i]
+
+	array[i + 1], array[right] = array[right], array[i + 1]
+
+	return i + 1
 
 # Quick sort implementation
-def my_sort(array):
+def my_sort(array, left, right):
 
-	half_array_length = int(len(array) / 2)
-	# take the middle-ish element as pivot
-	pivot = array[half_array_length]
+	if len(array) <= 1:
+		return array
 
-	for i in range(len(array)):
-		j = len(array) - i - 1
+	if left < right:
+		pivot =	prepare_array(array, left, right)
+		# sort left of pivot
+		my_sort(array, left, pivot - 1)
+		# sort right of pivot
+		my_sort(array, pivot + 1, right)
 
-		if j == i:
-			j -= 1
-		elif j < i:
-			break
 
-		if array[i] > array[j]:
-			array[j], array[i] = array[i], array[j]
-
-	print(locals())
-	new_array = np.array([])
-	# sort left side
-	if len(array[:half_array_length]) > 1:
-		np.append(new_array, my_sort(array[:half_array_length]))
-	# sort right side
-	if len(array[half_array_length:]) > 1:
-		np.append(new_array, my_sort(array[half_array_length:]))
-
-	print(locals())
-	return array
-
-sorted_array = my_sort(unsorted_array)
+my_sort(unsorted_array, 0, len(unsorted_array) - 1)
 natively_sorted_array = np.sort(unsorted_array)
 
-print(f"My sort:\n{sorted_array}")
-print(f"Built-in sort:\n{natively_sorted_array}", end="\n\n")
-print(f"'Are the arrays sorted the same?'...{(sorted_array == natively_sorted_array).all()}")
+# print(f"My sort:\n{unsorted_array}")
+# print(f"Built-in sort:\n{natively_sorted_array}")
+print(f"'Are the arrays sorted the same?'...{(unsorted_array == natively_sorted_array).all()}") # REALLY basic TDD
+
+print(f"And now reverse it so it's descending: {unsorted_array[::-1]}")
+
+
+# --- SCALAR PRODUCT --- #
+
+a = [1, 2, 12, 4]
+b = [2, 4, 2, 8]
+
+def scalar_product(a, b):
+
+	if len(a) != len(b):
+		raise Exception("Vector dimensions don't match!")
+
+	sum = 0
+
+	for i in range(len(a)):
+		sum += a[i] * b[i]
+
+	return sum
+
+print(f"Scalar product of {a} and {b}: {scalar_product(a, b)}")
+
+
+# --- THE SUM OF THE MARTIX --- #
+
+n = 128
+# Generate two random nxn matrices
+M1 = [[randrange(0, 1000) for _ in range(n)] for _ in range(n)]
+M2 = [[randrange(0, 1000) for _ in range(n)] for _ in range(n)]
+
+# Sum them
+def sum_matrices(M1, M2):
+
+	for i in range(len(M1)):
+		for j in range(len(M1[0])):
+			M1[i][j] += M2[i][j]
+
+	return M1
+
+# Print them
+def print_matrix(M):
+	for row in M:
+		print(row)
+
+# print(f"Matrix1:")
+# print_matrix(M1)
+# print(f"Matrix2:")
+# print_matrix(M2)
+# print(f"Sum:")
+# print_matrix(sum_matrices(M1, M2))
+
+
+# --- MATRIX MULTIPLICATION --- #
+
+n = 8
+# Generate two random nxn matrices
+M1 = [[randrange(0, 10) for _ in range(n)] for _ in range(n)]
+M2 = [[randrange(0, 10) for _ in range(n)] for _ in range(n)]
+
+def multiply_matrices(M1, M2):
+
+	M3 = [[0 for _ in range(n)] for _ in range(n)]
+
+	# dimensions of output matrix
+	width = len(M1[0])
+	heigth = len(M2)
+
+	# Transpose second matrix
+	M2 = [[M2[j][i] for j in range(len(M2))] for i in range(len(M2[0]))]
+
+	for i, row in enumerate(M1):
+		for j, column in enumerate(M2):
+
+			M3[i][j] = scalar_product(row, column)
+
+	return M3
+print("Matrix 1:")
+print_matrix(M1)
+print("Matrix 2:")
+print_matrix(M2)
+print("Their product:")
+print_matrix(multiply_matrices(M1, M2))
+
+
+# --- DETERMINANT OF THE MATRIX --- #
